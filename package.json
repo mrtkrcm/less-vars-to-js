@@ -17,6 +17,7 @@
     "commit": "git-cz",
     "commitmsg": "commitlint --edit --extends @commitlint/config-conventional",
     "prepublishOnly": "npm run build",
+    "prepare": "npm run build",
     "semantic-release": "semantic-release"
   },
   "repository": {
