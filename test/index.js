@@ -374,8 +374,8 @@ it('should parse functions when parseVariables is true', () => expect(lessVarsTo
   '@color': '#0337b9'
 }));
 
-it('should ignore stripPrefix when parseVariables is true', () => expect(lessVarsToJS(`
+it('should remove the @ when stripPrefix is true and parse functions', () => expect(lessVarsToJS(`
   @color : darken(#2763fb, 20%);
 `, { parseVariables: true, stripPrefix: true })).to.deep.equal({
-  '@color': '#0337b9'
+  'color': '#0337b9'
 }));

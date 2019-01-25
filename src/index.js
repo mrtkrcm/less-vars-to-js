@@ -171,7 +171,7 @@ export default (sheet, options = {}) => {
           console.warn(`Less render failed! (${e.message}) Less code:\n${sheet}\nVariables found:\n${Object.keys(lessVars)}`);
         } else {
           lessVars = getRegexpMatches(/--([^:]+): ([^;]*);/g, result.css.replace(/#resolved {(.*)}/, '$1')).reduce(
-            (acc, [, varName, value]) => Object.assign({}, acc, { [`@${varName}`]: value }),
+            (acc, [, varName, value]) => Object.assign({}, acc, { [stripPrefix ? varName : `@${varName}`]: value }),
             {}
           );
         }
