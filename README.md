@@ -66,6 +66,7 @@ colors: {
 | resolveVariables  | Resolves variables when they are defined in the same file.                                                   |
 | dictionary        | When `resolveVariables` is true, passes an object to use when the value cannot be resolved in the same file. |
 | stripPrefix       | Removes the `@` or `$` in the returned object keys.                                                          |
+| parseVariables    | Attempts to parse the less variables. `stripPrefix` is ignored.                                              |
 
 ### Usage
 ```js

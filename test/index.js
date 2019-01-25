@@ -367,3 +367,15 @@ it('should catch malformed less maps', () => expect(lessVarsToJS(`
 `, { resolveVariables: true })).to.deep.equal({
   '@colors': '{red:#FF0000,"blue":"#0000FF"}'
 }));
+
+it('should parse functions when parseVariables is true', () => expect(lessVarsToJS(`
+  @color : darken(#2763fb, 20%);
+`, { parseVariables: true })).to.deep.equal({
+  '@color': '#0337b9'
+}));
+
+it('should ignore stripPrefix when parseVariables is true', () => expect(lessVarsToJS(`
+  @color : darken(#2763fb, 20%);
+`, { parseVariables: true, stripPrefix: true })).to.deep.equal({
+  '@color': '#0337b9'
+}));

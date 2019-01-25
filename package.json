@@ -57,6 +57,7 @@
     "semantic-release": "^15.9.8"
   },
   "dependencies": {
+    "less": "^3.9.0",
     "strip-json-comments": "^2.0.1"
   },
   "engines": {

@@ -1,4 +1,5 @@
 import stripComments from 'strip-json-comments';
+import less from 'less';
 
 const varRgx = /^[@$]/;
 
@@ -72,10 +73,30 @@ const applyChangeCase = (key, changeCase) => {
   return prefix + parts.join(joinStr);
 };
 
+const getRegexpMatches = (regexp, text) => {
+  const matches = [];
+  const lastIndex = regexp.lastIndex;
+  let match;
+
+  do {
+    match = regexp.exec(text);
+    if (match) {
+      matches.push(match);
+    }
+    // prevent infinite loop (only regular expressions with `global` flag retain the `lastIndex`)
+  } while (match && regexp.global);
+
+  // don't leak `lastIndex` changes
+  regexp.lastIndex = lastIndex;
+
+  return matches;
+}
+
 export default (sheet, options = {}) => {
-  const { dictionary = {}, resolveVariables = false, stripPrefix = false, changeCase = false } = options;
+  const { dictionary = {}, resolveVariables = false, stripPrefix = false, changeCase = false, parseVariables = false } = options;
   let lessVars = {};
-  const matches = stripComments(sheet).match(/(?:[@$][\w-]*)\s*:\s*(?:\{.*?\}|[\s\w-#@()\/"':.%,]*)/gms) || [];
+  const matches = stripComments(sheet).match(/[@$](.*:[^;]*)/g) || [];
+  const transformKey = key => key.replace(varRgx, '');
 
   matches.forEach(variable => {
     // Get an array with first element as the name of the less variable
@@ -118,8 +139,6 @@ export default (sheet, options = {}) => {
   }
 
   if (stripPrefix) {
-    const transformKey = key => key.replace(varRgx, '');
-
     lessVars = Object.keys(lessVars).reduce((prev, key) => {
       prev[transformKey(key)] = lessVars[key];
       return prev;
@@ -138,6 +157,26 @@ export default (sheet, options = {}) => {
       prev[applyChangeCase(key, changeCase)] = lessVars[key];
       return prev;
     }, {});
+  }
+
+  if (parseVariables) {
+    const transform = key => {
+      const newKey = transformKey(key);
+      return `--${newKey}: @${newKey};`;
+    };
+
+    less.render(
+      `${sheet} #resolved {\n${Object.keys(lessVars).map(varName => transform(varName)).join('\n')}\n}`, (e, result) => {
+        if (e) {
+          console.warn(`Less render failed! (${e.message}) Less code:\n${sheet}\nVariables found:\n${Object.keys(lessVars)}`);
+        } else {
+          lessVars = getRegexpMatches(/--([^:]+): ([^;]*);/g, result.css.replace(/#resolved {(.*)}/, '$1')).reduce(
+            (acc, [, varName, value]) => Object.assign({}, acc, { [`@${varName}`]: value }),
+            {}
+          );
+        }
+      }
+    );
   }
 
   return lessVars;
