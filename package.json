@@ -22,22 +22,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/michaeltaranto/less-vars-to-js.git"
+    "url": "git+https://github.com/mrtkrcm/less-vars-to-js.git"
   },
   "author": {
     "name": "Michael Taranto",
-    "homepage": "https://github.com/michaeltaranto"
+    "homepage": "https://github.com/mrtkrcm"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://michaeltaranto.mit-license.org"
+      "url": "http://mrtkrcm.mit-license.org"
     }
   ],
   "bugs": {
-    "url": "https://github.com/michaeltaranto/less-vars-to-js/issues"
+    "url": "https://github.com/mrtkrcm/less-vars-to-js/issues"
   },
-  "homepage": "https://github.com/michaeltaranto/less-vars-to-js#readme",
+  "homepage": "https://github.com/mrtkrcm/less-vars-to-js#readme",
   "devDependencies": {
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.1",
